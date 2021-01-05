@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Aurora;
 
-class Server
+use Aurora\Contract\AuroraServerInterface;
+
+class Server implements AuroraServerInterface
 {
     /**
      * @var string

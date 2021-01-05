@@ -9,8 +9,8 @@ interface AuroraContainerInterface extends ContainerInterface
 {
     /**
      * Build container
-     * @param string $name   Instance name
-     * @param array $params  Parameters needed to build an instance
+     * @param string $name Instance name
+     * @param array $params Parameters needed to build an instance
      */
-    public function make(string $name, array $params);
+    public function make(string $name, array $params = []);
 }
