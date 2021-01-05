@@ -1,0 +1,20 @@
+{
+  "name": "jksusu/autora",
+  "description": "",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "jksusu",
+      "email": "jksusuppx@qq.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Aurora\\": "./src/"
+    }
+  },
+  "require": {
+    "psr/container": "^1.0",
+    "yjx/easy-di": "^1.0"
+  }
+}
