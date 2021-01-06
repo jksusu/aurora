@@ -22,6 +22,12 @@ class Container implements AuroraContainerInterface
 
     public function get($id)
     {
+        //如果已经实例化
+        if (array_key_exists($id, self::$container)) {
+            return self::$container[$id];
+        }
+        $params = self::getMethodParams($id);
+        return (new \ReflectionClass($id))->newInstanceArgs($params);
     }
 
     public function has($id)
@@ -29,9 +35,34 @@ class Container implements AuroraContainerInterface
         // TODO: Implement has() method.
     }
 
-    public function make(string $name, array $params = [])
+    public function make(string $className, string $methodName, array $params = [])
     {
-        // TODO: Implement make() method.
+        $instance = self::get($className);
+        $arr = self::getMethodParams($className, $methodName);
+        return $instance->{$methodName}(...array_merge($arr, $params));
+    }
+
+    public function getMethodParams($className, $methodsName = '__construct'): array
+    {
+        $class = new \ReflectionClass($className);
+        //获取每个方法的依赖
+        $arr = [];
+        if ($class->hasMethod($methodsName)) {
+            $construct = $class->getMethod($methodsName);
+            $params = $construct->getParameters();
+            if (count($params) > 0) {
+                foreach ($params as $key => $param) {
+                    $paramClass = $param->getClass();
+                    if ($paramClass) {
+                        $paramClassName = $param->getName();
+                        //解析依赖的依赖
+                        $args = self::getMethodParams($paramClassName);
+                        $arr[] = (new \ReflectionClass($paramClassName))->newInstanceArgs($args);
+                    }
+                }
+            }
+        }
+        return $arr;
     }
 
     /**

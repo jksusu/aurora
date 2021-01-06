@@ -26,6 +26,7 @@ class Server implements AuroraServerInterface
     {
         global $argv;
         $command = $argv[count($argv) - 1];
+        var_dump(config('server.http.host'));
         switch ($command) {
             case 'start':
                 $class = '';
@@ -50,5 +51,3 @@ class Server implements AuroraServerInterface
         echo("----------------------- start -d:后台运行-----------------------------\r\n");
     }
 }
-
-(new Server())->server();

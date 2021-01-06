@@ -12,5 +12,5 @@ interface AuroraContainerInterface extends ContainerInterface
      * @param string $name Instance name
      * @param array $params Parameters needed to build an instance
      */
-    public function make(string $name, array $params = []);
+    public function make(string $name, string $className,array $params = []);
 }
