@@ -3,7 +3,12 @@
 
 require BASE_PATH . '/vendor/autoload.php';
 
-(function () {
-    $server = new \Aurora\Server();
-    $server->server();
-})();
+/*use Psr\Container\ContainerInterface;
+
+$c = new EasyDI\Container();
+
+$config = $c->get(\Aurora\Config\Config::class);
+$con = $config->get('server.http');
+var_dump($con);*/
+$container = new \Aurora\Di\Container();
+$container->get(\Aurora\Server::class)->server();

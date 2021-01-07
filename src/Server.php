@@ -26,7 +26,7 @@ class Server implements AuroraServerInterface
     {
         global $argv;
         $command = $argv[count($argv) - 1];
-        var_dump(config('server.http.host'));
+        var_dump(config('server'));
         switch ($command) {
             case 'start':
                 $class = '';

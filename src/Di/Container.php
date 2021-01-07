@@ -14,20 +14,26 @@ class Container implements AuroraContainerInterface
     protected static $container = [];
 
     /**
-     * this class instance
-     * @var $instance
+     * 获取容器中的实例
+     * @param string $id
+     * @return mixed|object
+     * @throws \ReflectionException
      */
-    protected static $instance;
-
-
     public function get($id)
     {
         //如果已经实例化
         if (array_key_exists($id, self::$container)) {
             return self::$container[$id];
         }
-        $params = self::getMethodParams($id);
-        return (new \ReflectionClass($id))->newInstanceArgs($params);
+        $dependencies = self::getClassDependencies($id);
+        if (empty($dependencies)) {
+            $instance = self::getReflectionClass($id)->newInstanceWithoutConstructor();
+        } else {
+            $instance = self::getReflectionClass($id)->newInstanceArgs([]);
+        }
+        self::$container[$id] = $instance;
+
+        return $instance;
     }
 
     public function has($id)
@@ -37,53 +43,34 @@ class Container implements AuroraContainerInterface
 
     public function make(string $className, string $methodName, array $params = [])
     {
-        $instance = self::get($className);
-        $arr = self::getMethodParams($className, $methodName);
-        return $instance->{$methodName}(...array_merge($arr, $params));
-    }
-
-    public function getMethodParams($className, $methodsName = '__construct'): array
-    {
-        $class = new \ReflectionClass($className);
-        //获取每个方法的依赖
-        $arr = [];
-        if ($class->hasMethod($methodsName)) {
-            $construct = $class->getMethod($methodsName);
-            $params = $construct->getParameters();
-            if (count($params) > 0) {
-                foreach ($params as $key => $param) {
-                    $paramClass = $param->getClass();
-                    if ($paramClass) {
-                        $paramClassName = $param->getName();
-                        //解析依赖的依赖
-                        $args = self::getMethodParams($paramClassName);
-                        $arr[] = (new \ReflectionClass($paramClassName))->newInstanceArgs($args);
-                    }
-                }
-            }
-        }
-        return $arr;
     }
 
     /**
-     * get this container instance
-     * @return mixed
+     * 获取类的依赖
+     * @param $class
+     * @param $params
+     * @return null
      */
-    public static function getInstance()
+    public static function getClassDependencies($class, $params = '')
     {
-        if (is_null(static::$instance)) {
-            static::$instance = new static;
+        $reflectionClass = self::getReflectionClass($class);
+
+        if (!$reflectionClass->isInstantiable()) {
+            dd($class . '不可以实例化');
         }
 
-        if (static::$instance instanceof \Closure) {
-            return (static::$instance)();
+        if (!$reflectionClass->getConstructor()) {
+            return null;
         }
-
-        return static::$instance;
     }
 
-    private static function invokeClass(string $className, array $params = [])
+    /**
+     * 获取反射类
+     * @param $class
+     * @return \ReflectionClass
+     */
+    public static function getReflectionClass($class)
     {
-
+        return new \ReflectionClass($class);
     }
 }
