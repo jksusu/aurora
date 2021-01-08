@@ -54,7 +54,6 @@ class Container implements AuroraContainerInterface
     public static function getClassDependencies($class, $params = '')
     {
         $reflectionClass = self::getReflectionClass($class);
-
         if (!$reflectionClass->isInstantiable()) {
             dd($class . '不可以实例化');
         }
@@ -62,7 +61,27 @@ class Container implements AuroraContainerInterface
         if (!$reflectionClass->getConstructor()) {
             return null;
         }
+
+        //获取所有的方法
+
+        $refFunctions = $reflectionClass->getMethods();
+
+        foreach ($refFunctions as $item) {
+            //self::getFunctionDependencies($refFunctions,$item->getParameters());
+            foreach ($item as $i) {
+                $i->newInstance();
+            }
+        }
+        dd($refFunctions);
     }
+
+    public static function getFunctionDependencies($reflectionClass, $params)
+    {
+        foreach ($params as $param) {
+            $param->isInstantiable();
+        }
+    }
+
 
     /**
      * 获取反射类

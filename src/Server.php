@@ -3,10 +3,17 @@ declare(strict_types=1);
 
 namespace Aurora;
 
+use Aurora\Config\Config;
 use Aurora\Contract\AuroraServerInterface;
 
 class Server implements AuroraServerInterface
 {
+
+    public function __construct(Config $con,$id)
+    {
+
+    }
+
     /**
      * @var string
      */
@@ -26,7 +33,6 @@ class Server implements AuroraServerInterface
     {
         global $argv;
         $command = $argv[count($argv) - 1];
-        var_dump(config('server'));
         switch ($command) {
             case 'start':
                 $class = '';

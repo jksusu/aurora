@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Aurora\Config;
 
-class Config
+use Aurora\Contract\AuroraConfigInterface;
+
+class Config implements AuroraConfigInterface
 {
     /**
      * config file
@@ -40,5 +42,10 @@ class Config
             $config = $config[$key];
         }
         return $config;
+    }
+
+    public function set()
+    {
+
     }
 }
