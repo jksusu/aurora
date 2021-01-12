@@ -69,19 +69,10 @@ class Container implements AuroraContainerInterface
         foreach ($refFunctions as $item) {
             //self::getFunctionDependencies($refFunctions,$item->getParameters());
             foreach ($item as $i) {
-                $i->newInstance();
+                //$i->newInstance();
             }
         }
-        dd($refFunctions);
     }
-
-    public static function getFunctionDependencies($reflectionClass, $params)
-    {
-        foreach ($params as $param) {
-            $param->isInstantiable();
-        }
-    }
-
 
     /**
      * 获取反射类

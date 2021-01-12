@@ -9,7 +9,7 @@ use Aurora\Contract\AuroraServerInterface;
 class Server implements AuroraServerInterface
 {
 
-    public function __construct(Config $con,$id)
+    public function __construct(Config $con, $id)
     {
 
     }
@@ -32,15 +32,23 @@ class Server implements AuroraServerInterface
     public function server()
     {
         global $argv;
-        $command = $argv[count($argv) - 1];
-        switch ($command) {
-            case 'start':
-                $class = '';
+
+        $serverName = $argv[count($argv) - 2];
+        switch ($serverName) {
+            case 'http':
+                $class = \Aurora\Server\HttpServer::class;
                 break;
             case 'stop':
                 break;
             default:
-                exit('暂不支持:' . $command . '命令');
+                exit('暂不支持:' . $serverName . '命令');
+                break;
+        }
+
+
+        switch ($argv[count($argv) - 1]) {
+            case 'start':
+                return new $class;
                 break;
         }
     }
