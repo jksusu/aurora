@@ -6,7 +6,7 @@ namespace Aurora;
 use Aurora\Config\Config;
 use Aurora\Contract\AuroraServerInterface;
 
-class Server implements AuroraServerInterface
+class AuroraServer implements AuroraServerInterface
 {
 
     public function __construct(Config $con, $id)
@@ -18,16 +18,6 @@ class Server implements AuroraServerInterface
      * @var string
      */
     protected static $version = '0.1';
-
-    public static function show()
-    {
-        $version = self::$version;
-
-        echo("----------------------- autora:{$version} -----------------------------\r\n");
-        echo('SWOOLE version:' . SWOOLE_VERSION . '            PHP version:' . PHP_VERSION . "\r\n");
-        echo("------------------------ WORKERS -------------------------------\r\n");
-        echo("worker               listen                      processes status\r\n");
-    }
 
     public function server()
     {
@@ -53,15 +43,29 @@ class Server implements AuroraServerInterface
         }
     }
 
-    public static function outputError($message)
-    {
-        echo "\033[31m{$message}\033[0m" . date('Y-m-d H:i:s');
-        PHP_EOL;
-    }
-
     public static function help()
     {
         echo("----------------------- start:启动服务-----------------------------\r\n");
         echo("----------------------- start -d:后台运行-----------------------------\r\n");
+    }
+
+    public static function outputInfo(string $message, $type = 'INFO')
+    {
+        self::println('[' . date('Y-m-d H:i:s') . '] [' . $type . "] \033[32m{$message}\033[0m");
+    }
+
+    public static function show()
+    {
+        $version = self::$version;
+
+        echo("----------------------- autora:{$version} -----------------------------\r\n");
+        echo('SWOOLE version:' . SWOOLE_VERSION . '            PHP version:' . PHP_VERSION . "\r\n");
+        echo("------------------------ WORKERS -------------------------------\r\n");
+        echo("worker               listen                      processes status\r\n");
+    }
+
+    public static function println(string $message)
+    {
+        echo $message . PHP_EOL;
     }
 }

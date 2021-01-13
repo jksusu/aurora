@@ -11,4 +11,4 @@ $config = $c->get(\Aurora\Config\Config::class);
 $con = $config->get('server.http');
 var_dump($con);*/
 $container = new \Aurora\Di\Container();
-$container->get(\Aurora\Server::class)->server();
+$container->get(\Aurora\AuroraServer::class)->server();
