@@ -3,24 +3,16 @@ declare(strict_types=1);
 
 namespace Aurora;
 
-use Aurora\Config\Config;
 use Aurora\Contract\AuroraServerInterface;
 
 class AuroraServer implements AuroraServerInterface
 {
-
-    public function __construct(Config $con, $id)
-    {
-
-    }
-
-    /**
-     * @var string
-     */
     protected static $version = '0.1';
 
     public function server()
     {
+        self::show();
+
         global $argv;
 
         $serverName = $argv[count($argv) - 2];
@@ -28,7 +20,7 @@ class AuroraServer implements AuroraServerInterface
             case 'http':
                 $class = \Aurora\Server\HttpServer::class;
                 break;
-            case 'stop':
+            case 'websocket':
                 break;
             default:
                 exit('暂不支持:' . $serverName . '命令');
@@ -38,30 +30,24 @@ class AuroraServer implements AuroraServerInterface
 
         switch ($argv[count($argv) - 1]) {
             case 'start':
-                return new $class;
+                new $class;
                 break;
         }
     }
 
-    public static function help()
+    public static function show()
     {
-        echo("----------------------- start:启动服务-----------------------------\r\n");
-        echo("----------------------- start -d:后台运行-----------------------------\r\n");
+        self::outputInfo('|￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣');
+        self::outputInfo('| AURORA  version:'.self::$version);
+        self::outputInfo('| SWOOLE  version:'.SWOOLE_VERSION);
+        self::outputInfo('| PHP     version:'.PHP_VERSION);
+        self::outputInfo('|￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣');
+        self::outputInfo('|______________________________________');
     }
 
     public static function outputInfo(string $message, $type = 'INFO')
     {
         self::println('[' . date('Y-m-d H:i:s') . '] [' . $type . "] \033[32m{$message}\033[0m");
-    }
-
-    public static function show()
-    {
-        $version = self::$version;
-
-        echo("----------------------- autora:{$version} -----------------------------\r\n");
-        echo('SWOOLE version:' . SWOOLE_VERSION . '            PHP version:' . PHP_VERSION . "\r\n");
-        echo("------------------------ WORKERS -------------------------------\r\n");
-        echo("worker               listen                      processes status\r\n");
     }
 
     public static function println(string $message)

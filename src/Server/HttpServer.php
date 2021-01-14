@@ -15,6 +15,9 @@ class HttpServer
     public function __construct()
     {
         $this->config = config('server');
+
+        $this->checkEnv();
+
         $this->server = new Server($this->config['http']['host'], (int)$this->config['http']['port'], config('server.mode'));
 
         if ($this->config['mode'] === SWOOLE_BASE) {
@@ -80,16 +83,16 @@ class HttpServer
 
     }
 
-    public function checkEnv()
+    public  function checkEnv()
     {
         if (!\extension_loaded('swoole'))
         {
             throw new \RuntimeException('No Swoole extension installed or enabled');
         }
-        if (!array_key_exists('host', $this->config) || empty($this->config['http']['host'])) {
+        if (!array_key_exists('host', $this->config['http']) || empty($this->config['http']['host'])) {
             throw new \RuntimeException('host null');
         }
-        if (!array_key_exists('port', $this->config) || empty($this->config['http']['port'])) {
+        if (!array_key_exists('port', $this->config['http']) || empty($this->config['http']['port'])) {
             throw new \RuntimeException('port null');
         }
     }
