@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
+
 return [
 
-    'default_connections' => 'mysql',//如果没有默认，则取链接配置第一个链接
+    'default' => 'mysql',//如果没有默认，则取链接配置第一个链接
 
     'connections' => [
         'mysql' => [

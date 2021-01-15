@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Aurora\Server;
 
 use Aurora\AuroraServer;
-use Swoole\Http\Server;
+use Aurora\Event\EventHandle;
+use Aurora\Request;
 
 class HttpServer
 {
@@ -18,7 +19,7 @@ class HttpServer
 
         $this->checkEnv();
 
-        $this->server = new Server($this->config['http']['host'], (int)$this->config['http']['port'], config('server.mode'));
+        $this->server = new \Swoole\Http\Server($this->config['http']['host'], (int)$this->config['http']['port'], config('server.mode'));
 
         if ($this->config['mode'] === SWOOLE_BASE) {
             //mode=SWOOLE_BASE并且设置信息存在
@@ -71,6 +72,7 @@ class HttpServer
     public function onWorkerStart(\Swoole\Server $server, int $workId)
     {
         AuroraServer::outputInfo('Swoole WorkStart WorkId ' . $workId);
+        container(EventHandle::class)->handle($server, 'onWorkerStart');
     }
 
     public function onWorkerStop(\Swoole\Server $server, int $workId)
@@ -78,15 +80,15 @@ class HttpServer
         AuroraServer::outputInfo('Swoole WorkerStop WorkId ' . $workId);
     }
 
-    public function onRequest(\Swoole\Server $server)
+    public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
     {
-
+        var_dump($request);
+        //container(Request::class){($server)};
     }
 
-    public  function checkEnv()
+    public function checkEnv()
     {
-        if (!\extension_loaded('swoole'))
-        {
+        if (!\extension_loaded('swoole')) {
             throw new \RuntimeException('No Swoole extension installed or enabled');
         }
         if (!array_key_exists('host', $this->config['http']) || empty($this->config['http']['host'])) {
