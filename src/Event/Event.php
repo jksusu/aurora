@@ -13,6 +13,6 @@ class Event
         if (!array_key_exists('default', $config) || empty($config['default'])) {
 
         }
-        AuroraServer::outputInfo('Aurora\Event\Event::onWorkerStart');
+        AuroraServer::outputInfo('Aurora\Event\Event::onWorkerStart 初始化连接池');
     }
 }

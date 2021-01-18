@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Aurora\Server;
 
 use Aurora\AuroraServer;
+use Aurora\Context;
 use Aurora\Event\EventHandle;
-use Aurora\Request;
 
 class HttpServer
 {
@@ -83,7 +83,8 @@ class HttpServer
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
     {
         var_dump($request);
-        //container(Request::class){($server)};
+        Context::set('auroraRequest', $request);
+        Context::set('auroraResponse', $request);
     }
 
     public function checkEnv()
