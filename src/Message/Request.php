@@ -3,73 +3,29 @@ declare(strict_types=1);
 
 namespace Aurora\Message;
 
-use Aurora\Message\Contract\AuroraRequestInterface;
-use Psr\Http\Message\UriInterface;
+use Aurora\Message\Contract\AuroraRequestAbstract;
 
-class Request implements AuroraRequestInterface
+class Request extends AuroraRequestAbstract
 {
-
-    use Message;
-
-    /**
-     * @var \Swoole\Http\Request
-     */
-    protected $request;
-
-    /**
-     * 请求header参数
-     * @var array
-     */
-    protected $header = [];
-
-    /**
-     * 请求server
-     * @var $server
-     */
-    protected $server;
-
-    /**
-     * 请求cookie
-     * @var array
-     */
-    protected $cookie = [];
-
-    /**
-     * 上传的文件
-     * @var array
-     */
-    protected $files = [];
-
-    /**
-     * 请求参数
-     * @var array
-     */
-    protected $params = [];
 
     /**
      * 请求 uri
-     * @var $uri
+     * @var string
      */
     protected $uri;
 
     /**
      * 当前链接FD
-     * @var $fd
+     * @var string
      */
     protected $fd;
 
 
     /**
      * 请求
-     * @var $requestTarget
-     */
-    protected $requestTarget;
-
-    /**
-     * Http Method.
      * @var string
      */
-    protected $method;
+    protected $requestTarget;
 
     /**
      * 请求注入
@@ -129,47 +85,5 @@ class Request implements AuroraRequestInterface
     public function getFd()
     {
         return $this->request->fd;
-    }
-
-    /**
-     * @return \Psr\Http\Message\UriInterface
-     */
-    public function getUri(): UriInterface
-    {
-        return $this->uri;
-    }
-
-    public function getRequestTarget()
-    {
-        if ($this->requestTarget !== null) {
-            return $this->requestTarget;
-        }
-    }
-
-    public function withRequestTarget($requestTarget)
-    {
-        $new = clone $this;
-        $new->requestTarget = $requestTarget;
-        return $new;
-    }
-
-    /**
-     * 设置请求方法
-     * @param string $method
-     * @return Request
-     */
-    public function withMethod($method)
-    {
-        if (!in_array(strtoupper($method), ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'HEAD'])) {
-            throw new \InvalidArgumentException('Request Method Invalid');
-        }
-        $new = clone $this;
-        $new->method = $method;
-        return $new;
-    }
-
-    public function withUri(UriInterface $uri, $preserveHost = false)
-    {
-
     }
 }

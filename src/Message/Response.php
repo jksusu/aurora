@@ -3,24 +3,9 @@ declare(strict_types=1);
 
 namespace Aurora\Message;
 
-use Psr\Http\Message\ResponseInterface;
+use Aurora\Message\Contract\AuroraResponseAbstract;
 
-class Response implements ResponseInterface
+class Response extends AuroraResponseAbstract
 {
-    use Message;
 
-    public function getStatusCode()
-    {
-
-    }
-
-    public function withStatus($code, $reasonPhrase = '')
-    {
-
-    }
-
-    public function getReasonPhrase()
-    {
-
-    }
 }
